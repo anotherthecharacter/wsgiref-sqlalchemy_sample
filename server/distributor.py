@@ -17,7 +17,7 @@ def route(suffix: str, viewset):
 
 def appeal(uri: str, method: str, data: list):
     if view := paths.get(uri):
-        return view()
+        return view(method, data)
     else:
         return False
 

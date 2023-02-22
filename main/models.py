@@ -1,6 +1,10 @@
+from decouple import config
 from sqlalchemy import Column, Integer, String, Float, Text
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
 
-from config.settings import Base, engine
+
+Base = declarative_base()
 
 
 class Product(Base):
@@ -10,8 +14,9 @@ class Product(Base):
     title = Column(String(24))
     price = Column(Float(2))
     quantity = Column(Integer)
-    description = Column(Text)
+    description = Column(Text, nullable=True)
 
 
-def makemigrations():    
+def makemigrations():
+    engine = create_engine(f'postgresql://{config("DB_USER")}:{config("DB_PASSWORD")}@127.0.0.1:5432/wsgiref_sqlalchemy', echo=True)
     Base.metadata.create_all(engine)

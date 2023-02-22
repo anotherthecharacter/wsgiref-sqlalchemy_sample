@@ -30,7 +30,7 @@ def app(environ, start_response):
             ...  # TODO: JSON handle
             ...  # TODO: Required fields by serializer
     else:
-        ...  # TODO: NON_BODY_METHODS
+        data = None
     
     response = direct(environ['PATH_INFO'], environ['REQUEST_METHOD'], data)
 
