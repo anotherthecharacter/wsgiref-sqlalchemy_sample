@@ -1,5 +1,6 @@
-from server.distributor import direct
 import json
+
+from server.distributor import direct
 
 
 def prepare(request, boundary):

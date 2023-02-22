@@ -1,8 +1,7 @@
-import os
 import sys
 from wsgiref.simple_server import make_server
 
-from main.urls import plugs
+import config.urls
 from server.handler import app
 
 

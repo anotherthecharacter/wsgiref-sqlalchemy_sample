@@ -1,10 +1,11 @@
 import sys
 
+from main.models import makemigrations
 from server.runserver import initialize
-
 
 commands = {
     'runserver': initialize,
+    'migrate': makemigrations,
 }
 
 
