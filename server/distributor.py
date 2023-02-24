@@ -1,7 +1,4 @@
-class RoutingError(Exception):
-
-    def __str__(self) -> str:
-        return 'An error occurred while routing the URLs. Perhaps you have inserted a slashes "/" into suffixes?'
+from server.utils import RoutingError, HTTP404
 
 
 paths = {}
@@ -15,38 +12,30 @@ def route(suffix: str, viewset):
     paths.update({f'{suffix}/pk': viewset.retrieve_update_delete})
 
 
-def appeal(uri: str, method: str, data: list):
+def appeal(uri: str, method: str, data: list, pk: int):
     if view := paths.get(uri):
-        return view(method, data)
+        return view(method, data, pk)
     else:
-        return False
+        raise HTTP404
 
 
-def validate(uri):
+def direct(uri: str, method: str, data: list):
+    if uri == '/':
+        return appeal(uri, method, data, None)
+    
     if uri[-1] == '/':
         uri = uri[1:-1].split('/')
     else:
         uri = uri[1:].split('/')
         
     if '' in uri or len(uri) > 2:
-        return False
+        raise HTTP404
 
     try:
-        int(uri[1])
+        pk = int(uri[1])
     except IndexError:
-        return uri[0]
+        return appeal(uri[0], method, data, None)
     except ValueError:
-        return False
+        raise HTTP404
     else:
-        return f'{uri[0]}/pk'
-
-
-def direct(uri: str, method: str, data: list):
-    if uri == '/':
-        return appeal(uri, method, data)
-    
-    if uri := validate(uri):
-        return appeal(uri, method, data)
-    else:
-        print('404 in distributor.py')
-        return False
+        return appeal(f'{uri[0]}/pk', method, data, pk)

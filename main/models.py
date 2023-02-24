@@ -1,5 +1,5 @@
 from decouple import config
-from sqlalchemy import Column, Integer, String, Float, Text
+from sqlalchemy import Column, Integer, String, Numeric, Text
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -12,7 +12,7 @@ class Product(Base):
 
     id = Column(Integer, primary_key=True)
     title = Column(String(24))
-    price = Column(Float(2))
+    price = Column(Numeric(precision=10, scale=2))
     quantity = Column(Integer)
     description = Column(Text, nullable=True)
 

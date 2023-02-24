@@ -1,6 +1,7 @@
 import json
 
 from server.distributor import direct
+from server.utils import HTTP404
 
 
 def prepare(request, boundary):
@@ -32,11 +33,10 @@ def app(environ, start_response):
     else:
         data = None
     
-    response = direct(environ['PATH_INFO'], environ['REQUEST_METHOD'], data)
-
-    if response:
-        start_response("200 OK", [('Content-Type','text/plain; charset=utf-8')])
-        return [json.dumps(response).encode('utf-8')]
-    else:
+    try:
+        response = direct(environ['PATH_INFO'], environ['REQUEST_METHOD'], data)
+        start_response(response[0], [('Content-Type','text/plain; charset=utf-8')])
+        return [json.dumps(response[1]).encode('utf-8')]
+    except HTTP404:
         start_response('404 Not Found', [('Content-Type', 'text/plain')])
-        return [''.encode('utf-8')]
+        return [json.dumps({'detail': 'Not found.'}).encode('utf-8')]

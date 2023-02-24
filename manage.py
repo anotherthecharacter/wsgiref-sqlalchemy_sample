@@ -3,6 +3,7 @@ import sys
 from main.models import makemigrations
 from server.runserver import initialize
 
+
 commands = {
     'runserver': initialize,
     'migrate': makemigrations,
@@ -18,7 +19,7 @@ def available_commands():
 def start():
     try:
         commands.get(sys.argv[1])()
-    except IndexError as error:
+    except IndexError:
         print('Required argument is missing.\n')
         available_commands()
     except TypeError:
