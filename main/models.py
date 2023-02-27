@@ -1,10 +1,23 @@
-from decouple import config
-from sqlalchemy import Column, Integer, String, Numeric, Text
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
+import enum
+
+from sqlalchemy import Column, Enum, ForeignKey, Integer, Numeric, String, Text 
+
+from server.utils import Base
 
 
-Base = declarative_base()
+class Category(enum.Enum):
+    food = 'Еда'
+    merchandise = 'Товары'
+    other = 'Другое'
+
+
+class Organization(Base):
+    __tablename__ = 'organization'
+
+    id = Column(Integer, primary_key=True)
+    title = Column(String(24))
+    address = Column(String(32))
+    category = Column(Enum(Category))
 
 
 class Product(Base):
@@ -14,9 +27,5 @@ class Product(Base):
     title = Column(String(24))
     price = Column(Numeric(precision=10, scale=2))
     quantity = Column(Integer)
-    description = Column(Text, nullable=True)
-
-
-def makemigrations():
-    engine = create_engine(f'postgresql://{config("DB_USER")}:{config("DB_PASSWORD")}@127.0.0.1:5432/wsgiref_sqlalchemy', echo=True)
-    Base.metadata.create_all(engine)
+    description = Column(Text, default='...')
+    organization = Column(ForeignKey('organization.id', ondelete='CASCADE'))

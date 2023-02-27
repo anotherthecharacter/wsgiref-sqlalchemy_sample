@@ -23,15 +23,11 @@ def prepare(request, boundary):
 
 
 def app(environ, start_response):
-    if environ['REQUEST_METHOD'] in ('POST', 'PUT', 'PATCH'):
-        if environ['CONTENT_TYPE'].startswith('multipart/form-data;') and environ['CONTENT_LENGTH'] != '0':
+    if environ['REQUEST_METHOD'] in ('POST', 'PUT', 'PATCH') and environ['CONTENT_TYPE'].startswith('multipart/form-data;') and environ['CONTENT_LENGTH'] != '0':
             boundary = '--' + environ['CONTENT_TYPE'][30:] + '--'
             data = prepare(environ['wsgi.input'], boundary)
-        else:
-            ...  # TODO: JSON handle
-            ...  # TODO: Required fields by serializer
     else:
-        data = None
+        data = {}
     
     try:
         response = direct(environ['PATH_INFO'], environ['REQUEST_METHOD'], data)
