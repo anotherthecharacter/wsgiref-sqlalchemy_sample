@@ -12,7 +12,7 @@ commands = {
 
 def available_commands():
     print('Available commands:')
-    for command in commands.keys():
+    for command in commands:
         print(command)
 
 
